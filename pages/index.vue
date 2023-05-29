@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-const task = ref<String>()
+const isShowDialog = ref<boolean>(false)
+const task = ref<String>('')
 const taskState = useTask()
-const { taskGroup, addTaskToTaskGroup } = taskState
+const { addTaskToTaskGroup } = taskState
 
 function clickAdd() {
   addTaskToTaskGroup(String(task.value))
@@ -11,21 +12,30 @@ function clickAdd() {
 
 <template>
   <v-app>
-    <v-app-bar :title="'Nuxt3-TODO'"></v-app-bar>
+    <v-app-bar :title="'Nuxt3-TODO'">
+      <v-btn icon="mdi-plus" @click="isShowDialog = !isShowDialog"></v-btn>
+    </v-app-bar>
     <v-main>
       <v-container>
-        <v-row>
+        <v-row class="dialog" v-if="isShowDialog">
           <v-col>
             <v-text-field v-model="task" clearable :label="'タスクを入力'"></v-text-field>
-          </v-col>
-          <v-col>
             <v-btn @click="clickAdd">追加</v-btn>
           </v-col>
         </v-row>
         <v-row>
-          <p>{{ taskGroup }}</p>
+          <v-col>
+            <AppTaskTable />
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
   </v-app>
 </template>
+
+<style lang="scss" scoped>
+.dialog {
+  position: absolute;
+}
+</style>
+ 
